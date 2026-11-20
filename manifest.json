@@ -1,0 +1,19 @@
+{
+  "name": "عافر -MOVE!",
+  "short_name": "عافر -MOVE!",
+  "description": "تطبيق عافر -MOVE! لتحويل المهام اليومية وتطوير الذات واليوميات إلى نقاط ومكافآت ورتب",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f6fb",
+  "theme_color": "#4f46e5",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%234f46e5'/><text x='50' y='66' font-size='52' text-anchor='middle'>🎯</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4f46e5" />
+  <link rel="manifest" href="./manifest.json" />
+  <title>عافر -MOVE!</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --primary: #4f46e5;
+      --primary-soft: #eef2ff;
+      --text: #111827;
+      --muted: #6b7280;
+      --success: #059669;
+      --success-soft: #d1fae5;
+      --danger: #dc2626;
+      --danger-soft: #fee2e2;
+      --warning: #d97706;
+      --border: #e5e7eb;
+    }
+
+    body.dark {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --primary: #6366f1;
+      --primary-soft: #312e81;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --success: #10b981;
+      --success-soft: #064e3b;
+      --danger: #f87171;
+      --danger-soft: #450a0a;
+      --warning: #fbbf24;
+      --border: #334155;
+    }
+
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      padding-bottom: 92px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .app-container {
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .app-brand { font-size: 18px; font-weight: 800; }
+    .app-sub { font-size: 12px; color: var(--muted); font-weight: 600; }
+    .top-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .btn-sm {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .entrance-banner {
+      background: var(--card);
+      border-right: 4px solid var(--primary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .entrance-text { font-size: 14px; font-weight: 700; line-height: 1.55; }
+
+    .wallet-card {
+      background: linear-gradient(135deg, #334155, #475569);
+      color: #fff;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
+      margin-bottom: 14px;
+      transition: background 0.35s ease, box-shadow 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wallet-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .wallet-label { font-size: 13px; opacity: 0.92; }
+    .wallet-points { font-size: 32px; font-weight: 800; margin-top: 2px; }
+
+    .rank-vibe-badge {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .rank-box {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .rank-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .progress-bar-bg {
+      background: rgba(255, 255, 255, 0.25);
+      height: 10px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      background: #facc15;
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .stat-val { font-size: 20px; font-weight: 800; color: var(--primary); }
+    .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .panel-title {
+      margin: 0 0 12px;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    input, textarea, select {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    textarea { width: 100%; min-height: 78px; resize: vertical; margin-bottom: 10px; line-height: 1.6; }
+    textarea.journal-area { min-height: 120px; }
+    input.title-input { flex: 1; min-width: 170px; }
+    input.emoji-input { width: 78px; text-align: center; font-size: 22px; }
+    input.points-input { width: 115px; }
+
+    .hint-text { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+
+    .emoji-presets {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .emoji-chip {
+      border: 1px solid var(--border);
+      background: var(--primary-soft);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.08s ease, opacity 0.15s ease;
+    }
+
+    button:active { transform: scale(0.97); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-primary { background: var(--primary); color: #fff; width: 100%; padding: 12px; font-size: 14px; }
+    .btn-complete { background: var(--success); color: #fff; }
+    .btn-buy { background: var(--primary); color: #fff; }
+    .btn-edit { background: var(--primary-soft); color: var(--primary); }
+    .btn-delete { background: var(--danger-soft); color: var(--danger); }
+    .btn-cancel { background: var(--border); color: var(--text); }
+
+    .item-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .story-card, .journal-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    .story-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 6px;
+      gap: 8px;
+    }
+
+    .story-body { font-size: 13px; line-height: 1.7; color: var(--text); white-space: pre-line; }
+    .story-tag { font-size: 11px; color: var(--primary); font-weight: 700; margin-top: 6px; }
+
+    .journal-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 190px;
+    }
+
+    .item-emoji { font-size: 32px; }
+    .item-title { font-weight: 700; font-size: 15px; }
+    .item-pts-earn { color: var(--success); font-weight: 700; font-size: 13px; margin-top: 2px; }
+    .item-pts-cost { color: var(--warning); font-weight: 700; font-size: 13px; margin-top: 2px; }
+    .item-need { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .item-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      padding: 20px;
+      background: var(--bg);
+      border-radius: 14px;
+      border: 1px dashed var(--border);
+      font-size: 13px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    .bottom-nav-inner {
+      width: 100%;
+      max-width: 660px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      padding: 8px 4px;
+      gap: 3px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 8px 2px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+
+    .nav-btn.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .log-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="top-bar">
+      <div>
+        <div class="app-brand">🎯 عافر -MOVE!</div>
+        <div class="app-sub">تحرك، أنجز، وتجاوز حدودك</div>
+      </div>
+      <div class="top-actions">
+        <button id="resetDayBtn" class="btn-sm" type="button">🔄 يوم جديد</button>
+        <button id="themeToggleBtn" class="btn-sm" type="button">🌙 ليلي</button>
+      </div>
+    </div>
+
+    <div class="entrance-banner">
+      <div id="entranceQuoteText" class="entrance-text"></div>
+      <button id="shuffleEntranceBtn" class="btn-sm" type="button" title="تغيير عبارة الدخول">🎲</button>
+    </div>
+
+    <div id="walletCard" class="wallet-card">
+      <div class="wallet-top">
+        <div>
+          <div class="wallet-label">رصيد نقاط اليوم (<span id="todayDateLabel"></span>)</div>
+          <div class="wallet-points"><span id="pointsDisplay">0</span> نقطة</div>
+          <div id="rankVibeBadge" class="rank-vibe-badge">طابع البداية والانضباط</div>
+        </div>
+        <div style="font-size: 42px;" id="rankEmojiDisplay">🪖</div>
+      </div>
+
+      <div class="rank-box">
+        <div class="rank-header">
+          <span>الرتبة: <span id="rankTitleDisplay">مجند في الحلبة</span></span>
+          <span id="rankPointsProgress">0 / 100 نقطة</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="rankProgressBar" class="progress-bar-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div id="statCompletedTasks" class="stat-val">0</div>
+        <div class="stat-lbl">مهام مكتملة اليوم</div>
+      </div>
+      <div class="stat-card">
+        <div id="statTodayEarned" class="stat-val">0</div>
+        <div class="stat-lbl">نقاط مكتسبة اليوم</div>
+      </div>
+      <div class="stat-card">
+        <div id="statRedeemedRewards" class="stat-val">0</div>
+        <div class="stat-lbl">مكافآت مشتراة اليوم</div>
+      </div>
+    </div>
+
+    <section id="tab-tasks">
+      <div class="panel">
+        <h2 class="panel-title">
+          <span id="taskFormTitle">➕ إضافة مهمة جديدة</span>
+          <button id="cancelTaskEditBtn" class="btn-cancel hidden" type="button">إلغاء التعديل</button>
+        </h2>
+
+        <div class="form-row">
+          <input id="taskEmojiInput" class="emoji-input" type="text" value="📚" aria-label="إيموجي المهمة" />
+          <input id="taskTitleInput" class="title-input" type="text" placeholder="مثال: دراسة، مهارة اجتماعية، صفاء ذهني..." />
+          <input id="taskPointsInput" class="points-input" type="number" min="1" value="25" placeholder="النقاط" />
+        </div>
+
+        <div class="hint-text">اكتب أو الصق أي إيموجي حر، أو اختر من الاقتراحات:</div>
+        <div class="emoji-presets" data-target="taskEmojiInput">
+          <button type="button" class="emoji-chip">📚</button>
+          <button type="button" class="emoji-chip">🧠</button>
+          <button type="button" class="emoji-chip">🗣️</button>
+          <button type="button" class="emoji-chip">🧘</button>
+          <button type="button" class="emoji-chip">🏋️‍♂️</button>
+          <button type="button" class="emoji-chip">💻</button>
+          <button type="button" class="emoji-chip">🎯</button>
+          <button type="button" class="emoji-chip">🌱</button>
+        </div>
+
+        <button id="saveTaskBtn" class="btn-primary" type="button">حفظ المهمة في السوق</button>
+      </div>
+
+      <h2 class="panel-title">📋 سوق المهام</h2>
+      <div id="tasksList"></div>
+    </section>
+
+    <section id="tab-rewards" class="hidden">
+      <div class="panel">
+        <h2 class="panel-title">
+          <span id="rewardFormTitle">🎁 إضافة مكافأة إلى المتجر</span>
+          <button id="cancelRewardEditBtn" class="btn-cancel hidden" type="button">إلغاء التعديل</button>
+        </h2>
+
+        <div class="form-row">
+          <input id="rewardEmojiInput" class="emoji-input" type="text" value="🎬" aria-label="إيموجي المكافأة" />
+          <input id="rewardTitleInput" class="title-input" type="text" placeholder="مثال: مشاهدة فيلم، نوم إضافي..." />
+          <input id="rewardCostInput" class="points-input" type="number" min="1" value="60" placeholder="التكلفة" />
+        </div>
+
+        <div class="hint-text">اكتب أو الصق أي إيموجي للمكافأة:</div>
+        <div class="emoji-presets" data-target="rewardEmojiInput">
+          <button type="button" class="emoji-chip">🎬</button>
+          <button type="button" class="emoji-chip">😴</button>
+          <button type="button" class="emoji-chip">🎮</button>
+          <button type="button" class="emoji-chip">☕</button>
+          <button type="button" class="emoji-chip">🎧</button>
+          <button type="button" class="emoji-chip">🍦</button>
+        </div>
+
+        <button id="saveRewardBtn" class="btn-primary" type="button">حفظ المكافأة في المتجر</button>
+      </div>
+
+      <h2 class="panel-title">🛍️ سوق المكافآت</h2>
+      <div id="rewardsList"></div>
+    </section>
+
+    <section id="tab-journal" class="hidden">
+      <div class="panel">
+        <h2 class="panel-title">✍️ يوميات وتفريغ الذهن</h2>
+        <div class="hint-text">فرّغ هنا ما يجول في ذهنك من خواطر، أفكار مبعثرة، أو ملاحظات عن يومك لتخفف عن عقلك وتنظمه.</div>
+        <div class="form-row">
+          <input id="journalEmojiInput" class="emoji-input" type="text" value="🧠" aria-label="حالة أو إيموجي التدوينة" />
+          <input id="journalTitleInput" class="title-input" type="text" placeholder="عنوان مختصر (اختياري)..." />
+          <select id="journalKindSelect" aria-label="نوع التدوينة">
+            <option value="تفريغ ذهن">تفريغ ذهن</option>
+            <option value="يوميات">يوميات</option>
+            <option value="خاطرة">خاطرة</option>
+          </select>
+        </div>
+
+        <div class="emoji-presets" data-target="journalEmojiInput">
+          <button type="button" class="emoji-chip">🧠</button>
+          <button type="button" class="emoji-chip">✍️</button>
+          <button type="button" class="emoji-chip">💭</button>
+          <button type="button" class="emoji-chip">🌊</button>
+          <button type="button" class="emoji-chip">🕊️</button>
+          <button type="button" class="emoji-chip">🔥</button>
+        </div>
+
+        <textarea id="journalBodyInput" class="journal-area" placeholder="اكتب بحرية كل ما يخطر ببالك الآن..."></textarea>
+        <button id="saveJournalBtn" class="btn-primary" type="button">حفظ التدوينة</button>
+      </div>
+
+      <h2 class="panel-title">📓 سجل الخواطر واليوميات</h2>
+      <div id="journalList"></div>
+    </section>
+
+    <section id="tab-wisdom" class="hidden">
+      <div class="panel">
+        <h2 class="panel-title">
+          <span>⚡ مقولة اليوم (تحرك ومجاهدة)</span>
+          <button id="nextQuoteBtn" class="btn-sm" type="button">مقولة أخرى</button>
+        </h2>
+        <div id="dailyQuoteBox" class="story-card"></div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel-title">🔥 لماذا أفعل هذا؟ (بطاقات السبب الشخصي)</h2>
+        <div id="whyCardsList"></div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel-title">🏆 تقدير الذات (لأنك تنجز)</h2>
+        <div id="praiseCardsList"></div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel-title">📖 مكتبة القصص القصيرة والملهمة</h2>
+        <div id="storiesList"></div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel-title">➕ إضافة مقولة أو قصة أو "لماذا أفعل هذا" أو تقدير ذاتي</h2>
+        <div class="form-row">
+          <select id="customWisdomType" aria-label="نوع الإضافة">
+            <option value="QUOTE">مقولة تحرك ومجاهدة</option>
+            <option value="STORY">قصة قصيرة</option>
+            <option value="WHY">لماذا أفعل هذا؟</option>
+            <option value="PRAISE">تقدير ذاتي</option>
+          </select>
+          <input id="customWisdomTitle" class="title-input" type="text" placeholder="العنوان أو المصدر..." />
+        </div>
+        <textarea id="customWisdomBody" placeholder="اكتب النص أو القصة القصيرة هنا..."></textarea>
+        <button id="addCustomWisdomBtn" class="btn-primary" type="button">حفظ في المكتبة</button>
+      </div>
+    </section>
+
+    <section id="tab-history" class="hidden">
+      <div class="panel">
+        <h2 class="panel-title">
+          <span>📜 سجل اليوم</span>
+          <button id="undoLastBtn" class="btn-edit" type="button">↩️ تراجع عن آخر عملية</button>
+        </h2>
+        <div id="historyList"></div>
+      </div>
+    </section>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <button class="nav-btn active" data-tab="tasks" type="button">
+        <span>📋</span>
+        <span>المهام</span>
+      </button>
+      <button class="nav-btn" data-tab="rewards" type="button">
+        <span>🎁</span>
+        <span>المكافآت</span>
+      </button>
+      <button class="nav-btn" data-tab="journal" type="button">
+        <span>✍️</span>
+        <span>اليوميات</span>
+      </button>
+      <button class="nav-btn" data-tab="wisdom" type="button">
+        <span>📖</span>
+        <span>الحكمة</span>
+      </button>
+      <button class="nav-btn" data-tab="history" type="button">
+        <span>📜</span>
+        <span>السجل</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    const STORAGE_KEY = "aafir_dash_move_bang_v1";
+
+    const ENTRANCE_PHRASES = [
+      "مرحباً بك في الحلبة... هنا تُصنع الأفعال، لا الأقوال.",
+      "هذا اليوم ستتجاوز حدودك يا بطل.",
+      "هذا اليوم هو يوم تجاوز الحدود.",
+      "أهلاً بك في ساحة الإنجاز؛ لا تنتظر المزاج المثالي، الانضباط هو الذي يجعل اليوم مثالياً.",
+      "ساحة المعركة مفتوحة: خطوة صغيرة صادقة تهز ألف فكرة مؤجلة.",
+      "أنت اليوم أقوى من أمس بقدر ما التزمت وقاومت.",
+      "ابدأ بخطوة، فألف ميل تبدأ بخطوة.",
+      "من يغلب تسويفه في الصباح يملك يومه بالكامل، ويعود إلى بيته وهو مطمئن الضمير.",
+      "الميدان ينتظر فعلك الصادق، لا ترددك الطويل؛ فالمُقدِم يبني طريقه بيديه."
+    ];
+
+    const RANKS = [
+      { minPts: 0, title: "مجند في الحلبة", emoji: "🪖", gradient: "linear-gradient(135deg, #334155, #475569)", vibe: "طابع الانطلاق وكسر التردد" },
+      { minPts: 100, title: "باحث عن الذات", emoji: "🧭", gradient: "linear-gradient(135deg, #0f766e, #0284c7)", vibe: "طابع الاستكشاف والوعي" },
+      { minPts: 250, title: "مقاتل الانضباط", emoji: "⚔️", gradient: "linear-gradient(135deg, #b91c1c, #ea580c)", vibe: "طابع المواجهة والحسم" },
+      { minPts: 450, title: "متدرب الحكمة", emoji: "📜", gradient: "linear-gradient(135deg, #7e22ce, #4f46e5)", vibe: "طابع التأمل والعمق" },
+      { minPts: 700, title: "رقيب الإرادة", emoji: "🎖️", gradient: "linear-gradient(135deg, #1d4ed8, #2563eb)", vibe: "طابع الصرامة والعزم" },
+      { minPts: 1000, title: "حارس التركيز", emoji: "🛡️", gradient: "linear-gradient(135deg, #047857, #0d9488)", vibe: "طابع الصفاء وحماية الوقت" },
+      { minPts: 1350, title: "دارس العمق", emoji: "🕯️", gradient: "linear-gradient(135deg, #92400e, #b45309)", vibe: "طابع نور المعرفة والهدوء" },
+      { minPts: 1750, title: "قائد الكتيبة", emoji: "🚩", gradient: "linear-gradient(135deg, #be123c, #e11d48)", vibe: "طابع القيادة اليومية" },
+      { minPts: 2200, title: "صانع العادات", emoji: "⚙️", gradient: "linear-gradient(135deg, #374151, #4f46e5)", vibe: "طابع البناء والتكرار المتقن" },
+      { minPts: 2700, title: "فارس البصيرة", emoji: "🗡️", gradient: "linear-gradient(135deg, #0369a1, #4338ca)", vibe: "طابع وضوح الرؤية" },
+      { minPts: 3300, title: "ملازم الصمود", emoji: "🦅", gradient: "linear-gradient(135deg, #1e3a8a, #0f766e)", vibe: "طابع الثبات وقت الشدة" },
+      { minPts: 4000, title: "مفكر الحلبة", emoji: "🧠", gradient: "linear-gradient(135deg, #6d28d9, #db2777)", vibe: "طابع العقل الحاضر" },
+      { minPts: 4800, title: "جنرال الإنجاز", emoji: "⭐", gradient: "linear-gradient(135deg, #b45309, #d97706)", vibe: "طابع الأثر والنتائج" },
+      { minPts: 5700, title: "حكيم السلوك", emoji: "🌿", gradient: "linear-gradient(135deg, #15803d, #0f766e)", vibe: "طابع النضج والاتزان" },
+      { minPts: 6700, title: "قائد الفيلق", emoji: "🔱", gradient: "linear-gradient(135deg, #9f1239, #7e22ce)", vibe: "طابع السيادة على الذات" },
+      { minPts: 7800, title: "فيلسوف الفعل", emoji: "🏛️", gradient: "linear-gradient(135deg, #1e293b, #6d28d9)", vibe: "طابع انسجام القول والعمل" },
+      { minPts: 9000, title: "سيد الحلبة", emoji: "👑", gradient: "linear-gradient(135deg, #a16207, #ca8a04)", vibe: "طابع الإتقان العالي" },
+      { minPts: 10500, title: "أسطورة الحكمة والظفر الأبدي", emoji: "🌟", gradient: "linear-gradient(135deg, #4f46e5, #c026d3, #d97706)", vibe: "طابع القمة والخلود" }
+    ];
+
+    const ACTION_QUOTES = [
+      { author: "من المأثور", text: "إني لأستحي من الله أن أرى نفسي تكسل عن أمر أريده." },
+      { author: "من المأثور", text: "جاهد نفسك على الطاعة والعمل، فالنفس إذا لم تشغلها بالحق شغلتك بالباطل." },
+      { author: "تحرك ومجاهدة", text: "لا يدرك المجد إلا من واصل السير ولم يقف عند تعب الطريق." },
+      { author: "تحرك فوري", text: "قم الآن؛ فالتأجيل يسرق قوتك ولا يغيّر واقعك." },
+      { author: "مجاهدة النفس", text: "إن النفس لأمارة بالسوء، فاخضعها بعزمك ولا تسلمها لراحتها المؤقتة." },
+      { author: "ثبات وعزم", text: "من صدق في السعي غلب الكسل، ومن جاهد نفسه في البداية استراح في النهاية." },
+      { author: "كسر الثقل", text: "لا تنتظر أن يزول الثقل؛ تحرك بالثقل، فالحركة تكسره." },
+      { author: "عزيمة", text: "العزيمة الحقيقية تظهر حين يكون الجلوس أسهل والنهوض أصعب." },
+      { author: "مبادرة", text: "بادر قبل أن يبرد الحماس، واعمل ولو بقليل يثبت قدمك في الطريق." },
+      { author: "التردد والفعل", text: "التردد يطيل الطريق، أما الخطوة الأولى فتختصر نصف المسافة." },
+      { author: "مواجهة الكسل", text: "لا تفاوض الكسل؛ فهو لا يطلب منك إلا دقيقة واحدة لتضيع ساعة." },
+      { author: "قوة الإرادة", text: "قوة الإرادة تُبنى في اللحظة التي تقول فيها: سأبدأ الآن رغم التعب." },
+      { author: "البدء الفوري", text: "من اعتاد أن يبدأ فوراً، لم يجد للتسويف باباً يدخل منه." },
+      { author: "الحلبة والفعل", text: "الميدان لا يُفتح للمتفرجين، بل لمن ينزل إليه بقلب حاضر وعزم لا يلين." },
+      { author: "عتبة التغيير", text: "إذا ثقلت عليك البداية، فاعلم أنك تقف عند عتبة التغيير الحقيقي." },
+      { author: "اللحظة الراهنة", text: "الندم على ما فات لا يبني شيئاً؛ الفعل في هذه اللحظة هو الذي يصنع الفارق." },
+      { author: "صوت الفعل", text: "اجعل فعلك اليوم أعلى صوتاً من وعودك التي أجلتها بالأمس." },
+      { author: "الاستمرارية", text: "الثبات على القليل المستمر أقوى من اندفاع يوم ثم انقطاع أيام." },
+      { author: "مجاهدة الراحة", text: "واجه رغبتك في الراحة الزائدة بما تريده حقاً على المدى الطويل." },
+      { author: "كسر الرهبة", text: "كل دقيقة تؤجل فيها مهمتك تمنحها قوة أكبر؛ ابدأ الآن لتسحب منها رهبتها." },
+      { author: "البطولة", text: "البطولة ليست في غياب الخوف أو الكسل، بل في التقدم رغم وجودهما." },
+      { author: "جيم رون", text: "الانضباط هو الجسر الذي يربط بين الأهداف والإنجاز." },
+      { author: "روبرت كولير", text: "النجاح هو مجموع الجهود الصغيرة، التي تتكرر يوماً بعد يوم." },
+      { author: "ستيفن كينج", text: "الهواة يجلسون وينتظرون الإلهام، بقيتنا ينهضون ويذهبون إلى العمل." },
+      { author: "مارتن لوثر كينج", text: "ليس عليك رؤية الدرج بأكمله، فقط اتخذ الخطوة الأولى." },
+      { author: "بيتر دراكر", text: "أفضل طريقة للتنبؤ بالمستقبل هي خلقه." },
+      { author: "عمر بن الخطاب", text: "لا أسأل الله خفة الحمل، بل قوة الظهر." },
+      { author: "تشارلز ديكنز", text: "التسويف لصّ الوقت؛ ما يمكنك فعله اليوم لا تؤجله إلى غد." }
+    ];
+
+    const DEFAULT_STORIES = [
+      {
+        id: 1,
+        title: "الخطوة التي تكسر الجبل",
+        body: "كان يظن أن كتابة فصل كامل أو مراجعة مادة كاملة أمر شاق يستنزف ساعات. قرر أن يفتح الصفحة ويكتب أو يقرأ لمدة 5 دقائق فقط دون ضغط. بعد 5 دقائق وجد نفسه مندمجاً، وأكمل ما كان يظنه صعباً؛ لأن العائق الحقيقي لم يكن حجم المهمة، بل لحظة البدء.",
+        tag: "أشياء تبدو كبيرة ثم تصير يسيرة"
+      },
+      {
+        id: 2,
+        title: "عربة الكاكاو الصغيرة",
+        body: "في سن مبكرة، لم ينتظر الطفل كوري نيفيز ظروفاً مثالية؛ بل بدأ بعربة خشبية بسيطة يبيع عليها مشروباً دافئاً وكعكاً بإتقان وصدق، ومع تكرار العمل اليومي وتطوير الجودة تحول الجهد البسيط إلى مشروع حقيقي.",
+        tag: "التزام بسيط وبداية صادقة"
+      },
+      {
+        id: 3,
+        title: "المحاولة بعد التعثر",
+        body: "واجه المخترع جيمس دايسون مئات وآلاف المحاولات الفاشلة قبل أن ينجح تصميمه؛ لم يكن السر في ضربة حظ واحدة، بل في اعتبار كل محاولة فاشلة خطوة تكشف ما لا يعمل لتقترب من الحل.",
+        tag: "المثابرة والتعلم من المحاولة"
+      },
+      {
+        id: 4,
+        title: "القطرة على الصخر",
+        body: "لا يثقب الماء الصخر بقوته العنيفة في لحظة واحدة، بل بتتابعه واتصاله. هكذا المهارات الجديدة أو المواد الدراسية الطويلة: ربع ساعة صادقة كل يوم قد تبدو بلا أثر في اليوم الأول، لكنها مع الوقت تليّن أصعب ما كنت تهابه.",
+        tag: "التراكم اليومي"
+      },
+      {
+        id: 5,
+        title: "إزالة العقبة الأولى",
+        body: "كثيراً ما نؤجل مهمة لأننا نتخيلها في ذهننا بأكبر من حجمها الحقيقي: فتح الكتاب، ترتيب المكان، أو بدء حوار مهم. عندما تكتفي بأصغر خطوة ممكنة للبدء، ينكسر حاجز الرهبة وتجد نفسك تمضي بسهولة أكبر مما توقعت.",
+        tag: "كسر حاجز البداية"
+      }
+    ];
+
+    const DEFAULT_WHYS = [
+      { id: 1, title: "بناء نسخة أقوى من نفسي", body: "أعمل اليوم لأثبت لنفسي أن التزامي أصدق من مزاجي المتقلب." },
+      { id: 2, title: "الهدوء والاتزان النفسي والاجتماعي", body: "كل خطوة وعي وتدريب اليوم تصنع إنساناً أكثر ثباتاً ووضوحاً مع ذاته ومع الآخرين." }
+    ];
+
+    const DEFAULT_PRAISES = [
+      { id: 1, title: "أنت في مسار الفعل", body: "مجرد دخولك إلى الحلبة ومحاولتك إنجاز مهامك اليوم هو خطوة يتجاوزها كثيرون." },
+      { id: 2, title: "كل نقطة لها معنى", body: "النقاط التي تكسبها ليست أرقاماً؛ إنها دليل على أنك اخترت التقدم على التأجيل." },
+      { id: 3, title: "ثباتك يصنع الفارق", body: "ثباتك اليوم على خطوة بسيطة، حتى لو كانت صغيرة، هو انتصار حقيقي على عادة التأجيل." }
+    ];
+
+    function getTodayKey(date = new Date()) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function dayIndexFromKey(key) {
+      const parts = key.split("-").map(Number);
+      return Math.floor(Date.UTC(parts[0], parts[1] - 1, parts[2]) / 86400000);
+    }
+
+    const initialDay = getTodayKey();
+    const defaultState = {
+      dayKey: initialDay,
+      entranceIndex: dayIndexFromKey(initialDay) % ENTRANCE_PHRASES.length,
+      quoteOffset: 0,
+      points: 0,
+      lifetimePoints: 0,
+      todayEarned: 0,
+      completedCountToday: 0,
+      redeemedCountToday: 0,
+      darkMode: false,
+      activeTab: "tasks",
+      editingTaskId: null,
+      editingRewardId: null,
+      tasks: [
+        { id: 1, title: "دراسة 30 دقيقة بتركيز", emoji: "📚", points: 35 },
+        { id: 2, title: "تدريب على مهارة تواصل اجتماعي", emoji: "🗣️", points: 30 },
+        { id: 3, title: "تأمل وهدوء نفسي 10 دقائق", emoji: "🧘", points: 20 }
+      ],
+      rewards: [
+        { id: 101, title: "مشاهدة فيلم", emoji: "🎬", cost: 80 },
+        { id: 102, title: "نوم إضافي / قيلولة", emoji: "😴", cost: 50 },
+        { id: 103, title: "مشروب مفضل واستراحة", emoji: "☕", cost: 30 }
+      ],
+      journals: [],
+      customQuotes: [],
+      stories: DEFAULT_STORIES,
+      whys: DEFAULT_WHYS,
+      praises: DEFAULT_PRAISES,
+      history: []
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(defaultState);
+        return { ...structuredClone(defaultState), ...JSON.parse(raw) };
+      } catch {
+        return structuredClone(defaultState);
+      }
+    }
+
+    let state = loadState();
+
+    function ensureCurrentDay() {
+      const today = getTodayKey();
+      if (state.dayKey !== today) {
+        state.dayKey = today;
+        state.entranceIndex = dayIndexFromKey(today) % ENTRANCE_PHRASES.length;
+        state.quoteOffset = 0;
+        state.points = 0;
+        state.todayEarned = 0;
+        state.completedCountToday = 0;
+        state.redeemedCountToday = 0;
+        state.history = [];
+        saveState();
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    const walletCard = document.getElementById("walletCard");
+    const rankVibeBadge = document.getElementById("rankVibeBadge");
+    const entranceQuoteText = document.getElementById("entranceQuoteText");
+    const shuffleEntranceBtn = document.getElementById("shuffleEntranceBtn");
+    const nextQuoteBtn = document.getElementById("nextQuoteBtn");
+    const todayDateLabel = document.getElementById("todayDateLabel");
+    const pointsDisplay = document.getElementById("pointsDisplay");
+    const rankEmojiDisplay = document.getElementById("rankEmojiDisplay");
+    const rankTitleDisplay = document.getElementById("rankTitleDisplay");
+    const rankPointsProgress = document.getElementById("rankPointsProgress");
+    const rankProgressBar = document.getElementById("rankProgressBar");
+
+    const statCompletedTasks = document.getElementById("statCompletedTasks");
+    const statTodayEarned = document.getElementById("statTodayEarned");
+    const statRedeemedRewards = document.getElementById("statRedeemedRewards");
+
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const resetDayBtn = document.getElementById("resetDayBtn");
+
+    const taskEmojiInput = document.getElementById("taskEmojiInput");
+    const taskTitleInput = document.getElementById("taskTitleInput");
+    const taskPointsInput = document.getElementById("taskPointsInput");
+    const saveTaskBtn = document.getElementById("saveTaskBtn");
+    const cancelTaskEditBtn = document.getElementById("cancelTaskEditBtn");
+    const taskFormTitle = document.getElementById("taskFormTitle");
+    const tasksList = document.getElementById("tasksList");
+
+    const rewardEmojiInput = document.getElementById("rewardEmojiInput");
+    const rewardTitleInput = document.getElementById("rewardTitleInput");
+    const rewardCostInput = document.getElementById("rewardCostInput");
+    const saveRewardBtn = document.getElementById("saveRewardBtn");
+    const cancelRewardEditBtn = document.getElementById("cancelRewardEditBtn");
+    const rewardFormTitle = document.getElementById("rewardFormTitle");
+    const rewardsList = document.getElementById("rewardsList");
+
+    const journalEmojiInput = document.getElementById("journalEmojiInput");
+    const journalTitleInput = document.getElementById("journalTitleInput");
+    const journalKindSelect = document.getElementById("journalKindSelect");
+    const journalBodyInput = document.getElementById("journalBodyInput");
+    const saveJournalBtn = document.getElementById("saveJournalBtn");
+    const journalList = document.getElementById("journalList");
+
+    const dailyQuoteBox = document.getElementById("dailyQuoteBox");
+    const whyCardsList = document.getElementById("whyCardsList");
+    const praiseCardsList = document.getElementById("praiseCardsList");
+    const storiesList = document.getElementById("storiesList");
+    const customWisdomType = document.getElementById("customWisdomType");
+    const customWisdomTitle = document.getElementById("customWisdomTitle");
+    const customWisdomBody = document.getElementById("customWisdomBody");
+    const addCustomWisdomBtn = document.getElementById("addCustomWisdomBtn");
+
+    const historyList = document.getElementById("historyList");
+    const undoLastBtn = document.getElementById("undoLastBtn");
+
+    function switchTab(tabName) {
+      ensureCurrentDay();
+      state.activeTab = tabName;
+      saveState();
+
+      ["tasks", "rewards", "journal", "wisdom", "history"].forEach((t) => {
+        document.getElementById(`tab-${t}`).classList.toggle("hidden", t !== tabName);
+      });
+
+      document.querySelectorAll(".nav-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.tab === tabName);
+      });
+    }
+
+    document.querySelectorAll(".nav-btn").forEach((btn) => {
+      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+    });
+
+    shuffleEntranceBtn.addEventListener("click", () => {
+      state.entranceIndex = (state.entranceIndex + 1) % ENTRANCE_PHRASES.length;
+      saveState();
+      renderAll();
+    });
+
+    nextQuoteBtn.addEventListener("click", () => {
+      state.quoteOffset = (state.quoteOffset || 0) + 1;
+      saveState();
+      renderWisdomSection();
+    });
+
+    themeToggleBtn.addEventListener("click", () => {
+      state.darkMode = !state.darkMode;
+      saveState();
+      applyTheme();
+    });
+
+    resetDayBtn.addEventListener("click", () => {
+      if (confirm("هل تريد بدء يوم جديد يدوياً وتصفير نقاط وسجل اليوم؟")) {
+        state.points = 0;
+        state.todayEarned = 0;
+        state.completedCountToday = 0;
+        state.redeemedCountToday = 0;
+        state.quoteOffset = 0;
+        state.history = [];
+        saveState();
+        renderAll();
+      }
+    });
+
+    function applyTheme() {
+      document.body.classList.toggle("dark", Boolean(state.darkMode));
+      themeToggleBtn.textContent = state.darkMode ? "☀️ نهاري" : "🌙 ليلي";
+    }
+
+    document.querySelectorAll(".emoji-presets").forEach((group) => {
+      const targetInput = document.getElementById(group.dataset.target);
+      group.querySelectorAll(".emoji-chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          targetInput.value = chip.textContent.trim();
+          targetInput.focus();
+        });
+      });
+    });
+
+    function resetTaskForm() {
+      state.editingTaskId = null;
+      taskFormTitle.textContent = "➕ إضافة مهمة جديدة";
+      saveTaskBtn.textContent = "حفظ المهمة في السوق";
+      cancelTaskEditBtn.classList.add("hidden");
+      taskEmojiInput.value = "📚";
+      taskTitleInput.value = "";
+      taskPointsInput.value = "25";
+    }
+
+    function resetRewardForm() {
+      state.editingRewardId = null;
+      rewardFormTitle.textContent = "🎁 إضافة مكافأة إلى المتجر";
+      saveRewardBtn.textContent = "حفظ المكافأة في المتجر";
+      cancelRewardEditBtn.classList.add("hidden");
+      rewardEmojiInput.value = "🎬";
+      rewardTitleInput.value = "";
+      rewardCostInput.value = "60";
+    }
+
+    cancelTaskEditBtn.addEventListener("click", resetTaskForm);
+    cancelRewardEditBtn.addEventListener("click", resetRewardForm);
+
+    saveTaskBtn.addEventListener("click", () => {
+      ensureCurrentDay();
+      const title = taskTitleInput.value.trim();
+      const emoji = taskEmojiInput.value.trim() || "🎯";
+      const points = parseInt(taskPointsInput.value, 10);
+
+      if (!title || isNaN(points) || points < 1) return alert("يرجى إدخال اسم المهمة وعدد نقاط صحيح.");
+
+      if (state.editingTaskId !== null) {
+        const idx = state.tasks.findIndex((t) => t.id === state.editingTaskId);
+        if (idx !== -1) state.tasks[idx] = { ...state.tasks[idx], title, emoji, points };
+        resetTaskForm();
+      } else {
+        state.tasks.unshift({ id: Date.now(), title, emoji, points });
+        taskTitleInput.value = "";
+      }
+
+      saveState();
+      renderAll();
+    });
+
+    saveRewardBtn.addEventListener("click", () => {
+      ensureCurrentDay();
+      const title = rewardTitleInput.value.trim();
+      const emoji = rewardEmojiInput.value.trim() || "🎁";
+      const cost = parseInt(rewardCostInput.value, 10);
+
+      if (!title || isNaN(cost) || cost < 1) return alert("يرجى إدخال اسم المكافأة وتكلفة صحيحة.");
+
+      if (state.editingRewardId !== null) {
+        const idx = state.rewards.findIndex((r) => r.id === state.editingRewardId);
+        if (idx !== -1) state.rewards[idx] = { ...state.rewards[idx], title, emoji, cost };
+        resetRewardForm();
+      } else {
+        state.rewards.unshift({ id: Date.now(), title, emoji, cost });
+        rewardTitleInput.value = "";
+      }
+
+      saveState();
+      renderAll();
+    });
+
+    tasksList.addEventListener("click", (e) => {
+      ensureCurrentDay();
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      const id = Number(btn.dataset.id);
+      const action = btn.dataset.action;
+      const idx = state.tasks.findIndex((t) => t.id === id);
+      if (idx === -1) return;
+      const task = state.tasks[idx];
+
+      if (action === "complete") {
+        state.points += task.points;
+        state.lifetimePoints += task.points;
+        state.todayEarned += task.points;
+        state.completedCountToday += 1;
+        state.history.unshift({
+          id: Date.now(),
+          type: "EARN",
+          title: task.title,
+          emoji: task.emoji,
+          points: task.points,
+          time: new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })
+        });
+        saveState();
+        renderAll();
+      } else if (action === "edit") {
+        state.editingTaskId = task.id;
+        taskFormTitle.textContent = "✏️ تعديل المهمة";
+        saveTaskBtn.textContent = "تحديث المهمة";
+        cancelTaskEditBtn.classList.remove("hidden");
+        taskEmojiInput.value = task.emoji;
+        taskTitleInput.value = task.title;
+        taskPointsInput.value = task.points;
+        taskTitleInput.focus();
+      } else if (action === "delete") {
+        if (confirm(`حذف المهمة "${task.title}"؟`)) {
+          state.tasks.splice(idx, 1);
+          if (state.editingTaskId === id) resetTaskForm();
+          saveState();
+          renderAll();
+        }
+      }
+    });
+
+    rewardsList.addEventListener("click", (e) => {
+      ensureCurrentDay();
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      const id = Number(btn.dataset.id);
+      const action = btn.dataset.action;
+      const idx = state.rewards.findIndex((r) => r.id === id);
+      if (idx === -1) return;
+      const reward = state.rewards[idx];
+
+      if (action === "buy") {
+        if (state.points < reward.cost) return alert(`رصيدك غير كافٍ. ينقصك ${reward.cost - state.points} نقطة.`);
+        state.points -= reward.cost;
+        state.redeemedCountToday += 1;
+        state.history.unshift({
+          id: Date.now(),
+          type: "SPEND",
+          title: reward.title,
+          emoji: reward.emoji,
+          points: reward.cost,
+          time: new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })
+        });
+        saveState();
+        renderAll();
+        alert(`تم شراء المكافأة: ${reward.emoji} ${reward.title}!`);
+      } else if (action === "edit") {
+        state.editingRewardId = reward.id;
+        rewardFormTitle.textContent = "✏️ تعديل المكافأة";
+        saveRewardBtn.textContent = "تحديث المكافأة";
+        cancelRewardEditBtn.classList.remove("hidden");
+        rewardEmojiInput.value = reward.emoji;
+        rewardTitleInput.value = reward.title;
+        rewardCostInput.value = reward.cost;
+        rewardTitleInput.focus();
+      } else if (action === "delete") {
+        if (confirm(`حذف المكافأة "${reward.title}"؟`)) {
+          state.rewards.splice(idx, 1);
+          if (state.editingRewardId === id) resetRewardForm();
+          saveState();
+          renderAll();
+        }
+      }
+    });
+
+    saveJournalBtn.addEventListener("click", () => {
+      const body = journalBodyInput.value.trim();
+      if (!body) return alert("اكتب ما يجول في ذهنك أو خاطرتك أولاً.");
+
+      const entry = {
+        id: Date.now(),
+        emoji: journalEmojiInput.value.trim() || "🧠",
+        title: journalTitleInput.value.trim() || journalKindSelect.value,
+        kind: journalKindSelect.value,
+        body,
+        dateLabel: `${getTodayKey()} • ${new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })}`
+      };
+
+      state.journals.unshift(entry);
+      journalTitleInput.value = "";
+      journalBodyInput.value = "";
+      saveState();
+      renderJournalSection();
+    });
+
+    journalList.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-del-journal]");
+      if (!btn) return;
+      const id = Number(btn.dataset.delJournal);
+      if (confirm("حذف هذه التدوينة؟")) {
+        state.journals = state.journals.filter((j) => j.id !== id);
+        saveState();
+        renderJournalSection();
+      }
+    });
+
+    addCustomWisdomBtn.addEventListener("click", () => {
+      const type = customWisdomType.value;
+      const title = customWisdomTitle.value.trim();
+      const body = customWisdomBody.value.trim();
+
+      if (!body) return alert("من فضلك اكتب النص أو القصة أو السبب.");
+
+      const newEntry = {
+        id: Date.now(),
+        title: title || (type === "WHY" ? "لماذا أفعل هذا؟" : type === "PRAISE" ? "تقدير ذاتي" : "إضافة شخصية"),
+        body,
+        tag: "إضافتك الخاصة"
+      };
+
+      if (type === "QUOTE") state.customQuotes.unshift(newEntry);
+      else if (type === "STORY") state.stories.unshift(newEntry);
+      else if (type === "WHY") state.whys.unshift(newEntry);
+      else if (type === "PRAISE") state.praises.unshift(newEntry);
+
+      customWisdomTitle.value = "";
+      customWisdomBody.value = "";
+      saveState();
+      renderAll();
+    });
+
+    undoLastBtn.addEventListener("click", () => {
+      ensureCurrentDay();
+      const last = state.history.shift();
+      if (!last) return;
+
+      if (last.type === "EARN") {
+        state.points = Math.max(0, state.points - last.points);
+        state.lifetimePoints = Math.max(0, state.lifetimePoints - last.points);
+        state.todayEarned = Math.max(0, state.todayEarned - last.points);
+        state.completedCountToday = Math.max(0, state.completedCountToday - 1);
+      } else if (last.type === "SPEND") {
+        state.points += last.points;
+        state.redeemedCountToday = Math.max(0, state.redeemedCountToday - 1);
+      }
+
+      saveState();
+      renderAll();
+    });
+
+    function updateRankUI() {
+      const total = state.lifetimePoints || 0;
+      let currentRankIdx = 0;
+      for (let i = 0; i < RANKS.length; i++) {
+        if (total >= RANKS[i].minPts) currentRankIdx = i;
+      }
+      const cur = RANKS[currentRankIdx];
+      const next = RANKS[currentRankIdx + 1];
+
+      walletCard.style.background = cur.gradient;
+      rankVibeBadge.textContent = cur.vibe;
+      rankEmojiDisplay.textContent = cur.emoji;
+      rankTitleDisplay.textContent = cur.title;
+
+      if (next) {
+        const pct = Math.min(100, Math.max(0, ((total - cur.minPts) / (next.minPts - cur.minPts)) * 100));
+        rankPointsProgress.textContent = `${total} / ${next.minPts} نقطة للترقية`;
+        rankProgressBar.style.width = `${pct}%`;
+      } else {
+        rankPointsProgress.textContent = `${total} نقطة • أقصى رتبة!`;
+        rankProgressBar.style.width = "100%";
+      }
+    }
+
+    function renderJournalSection() {
+      if (!state.journals || state.journals.length === 0) {
+        journalList.innerHTML = `<div class="empty-state">لا توجد تدوينات بعد. اكتب أول خاطرة أو تفريغ ذهني في الأعلى.</div>`;
+        return;
+      }
+
+      journalList.innerHTML = state.journals.map((j) => `
+        <div class="journal-card">
+          <div class="journal-meta">
+            <span>${escapeHtml(j.emoji)} <strong>${escapeHtml(j.title)}</strong> • ${escapeHtml(j.kind)}</span>
+            <span>${escapeHtml(j.dateLabel)}</span>
+          </div>
+          <div class="story-body">${escapeHtml(j.body)}</div>
+          <div style="margin-top:8px;text-align:left;">
+            <button class="btn-delete" data-del-journal="${j.id}" type="button">حذف</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderWisdomSection() {
+      const allQuotes = [
+        ...state.customQuotes.map((q) => ({ author: q.title, text: q.body })),
+        ...ACTION_QUOTES
+      ];
+      const baseIdx = dayIndexFromKey(state.dayKey) + (state.quoteOffset || 0);
+      const q = allQuotes[baseIdx % allQuotes.length];
+      dailyQuoteBox.innerHTML = `
+        <div class="story-body" style="font-size:15px;font-weight:700;">"${escapeHtml(q.text)}"</div>
+        <div class="story-tag">— ${escapeHtml(q.author)}</div>
+      `;
+
+      whyCardsList.innerHTML = state.whys.length
+        ? state.whys.map((w) => `
+            <div class="story-card">
+              <div class="story-head"><span>🔥 ${escapeHtml(w.title)}</span></div>
+              <div class="story-body">${escapeHtml(w.body)}</div>
+            </div>
+          `).join("")
+        : `<div class="empty-state">لا توجد بطاقات سبب بعد.</div>`;
+
+      praiseCardsList.innerHTML = state.praises.length
+        ? state.praises.map((p) => `
+            <div class="story-card">
+              <div class="story-head"><span>🌟 ${escapeHtml(p.title)}</span></div>
+              <div class="story-body">${escapeHtml(p.body)}</div>
+            </div>
+          `).join("")
+        : `<div class="empty-state">لا توجد بطاقات تقدير بعد.</div>`;
+
+      storiesList.innerHTML = state.stories.length
+        ? state.stories.map((s) => `
+            <div class="story-card">
+              <div class="story-head"><span>📖 ${escapeHtml(s.title)}</span></div>
+              <div class="story-body">${escapeHtml(s.body)}</div>
+              <div class="story-tag">${escapeHtml(s.tag || "قصة ملهمة")}</div>
+            </div>
+          `).join("")
+        : `<div class="empty-state">لا توجد قصص بعد.</div>`;
+    }
+
+    function renderAll() {
+      ensureCurrentDay();
+      entranceQuoteText.textContent = ENTRANCE_PHRASES[state.entranceIndex % ENTRANCE_PHRASES.length];
+      todayDateLabel.textContent = state.dayKey;
+      pointsDisplay.textContent = state.points;
+
+      statCompletedTasks.textContent = state.completedCountToday || 0;
+      statTodayEarned.textContent = state.todayEarned || 0;
+      statRedeemedRewards.textContent = state.redeemedCountToday || 0;
+
+      updateRankUI();
+      renderJournalSection();
+      renderWisdomSection();
+
+      if (state.tasks.length === 0) {
+        tasksList.innerHTML = `<div class="empty-state">لا توجد مهام حالياً.</div>`;
+      } else {
+        tasksList.innerHTML = state.tasks.map((t) => `
+          <div class="item-card">
+            <div class="item-left">
+              <div class="item-emoji">${escapeHtml(t.emoji)}</div>
+              <div>
+                <div class="item-title">${escapeHtml(t.title)}</div>
+                <div class="item-pts-earn">+${t.points} نقطة</div>
+              </div>
+            </div>
+            <div class="item-actions">
+              <button class="btn-complete" data-action="complete" data-id="${t.id}" type="button">إتمام ✓</button>
+              <button class="btn-edit" data-action="edit" data-id="${t.id}" type="button">تعديل</button>
+              <button class="btn-delete" data-action="delete" data-id="${t.id}" type="button">حذف</button>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      if (state.rewards.length === 0) {
+        rewardsList.innerHTML = `<div class="empty-state">لا توجد مكافآت حالياً.</div>`;
+      } else {
+        rewardsList.innerHTML = state.rewards.map((r) => {
+          const canAfford = state.points >= r.cost;
+          return `
+            <div class="item-card">
+              <div class="item-left">
+                <div class="item-emoji">${escapeHtml(r.emoji)}</div>
+                <div>
+                  <div class="item-title">${escapeHtml(r.title)}</div>
+                  <div class="item-pts-cost">التكلفة: ${r.cost} نقطة</div>
+                  ${!canAfford ? `<div class="item-need">ينقصك ${r.cost - state.points} نقطة اليوم</div>` : ""}
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="btn-buy" data-action="buy" data-id="${r.id}" ${!canAfford ? "disabled" : ""} type="button">شراء</button>
+                <button class="btn-edit" data-action="edit" data-id="${r.id}" type="button">تعديل</button>
+                <button class="btn-delete" data-action="delete" data-id="${r.id}" type="button">حذف</button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      undoLastBtn.disabled = state.history.length === 0;
+      if (state.history.length === 0) {
+        historyList.innerHTML = `<div class="empty-state">لا توجد عمليات مسجلة اليوم.</div>`;
+      } else {
+        historyList.innerHTML = state.history.map((h) => `
+          <div class="item-card">
+            <div class="item-left">
+              <div class="item-emoji">${escapeHtml(h.emoji)}</div>
+              <div>
+                <div class="item-title">${escapeHtml(h.title)}</div>
+                <div class="log-meta">${h.type === "EARN" ? "إتمام مهمة" : "شراء مكافأة"} • ${escapeHtml(h.time)}</div>
+              </div>
+            </div>
+            <div class="${h.type === "EARN" ? "item-pts-earn" : "item-pts-cost"}">
+              ${h.type === "EARN" ? "+" : "-"}${h.points} نقطة
+            </div>
+          </div>
+        `).join("");
+      }
+    }
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(() => {});
+      });
+    }
+
+    applyTheme();
+    switchTab(state.activeTab || "tasks");
+    renderAll();
+  </script>
+</body>
+</html>
