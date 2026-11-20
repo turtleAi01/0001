@@ -587,6 +587,138 @@
   <script>
     const STORAGE_KEY = "aafir_dash_move_bang_v1";
 
+    // مؤثرات صوتية مدمجة عبر Web Audio API (بدون ملفات صوتية خارجية)
+    let audioCtx = null;
+
+    function getAudioContext() {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return null;
+      if (!audioCtx) {
+        audioCtx = new AudioContextClass();
+      }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    }
+
+    function playTaskDingSound() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        // صوت إتمام بومودورو 25 دقيقة الدافئ مع عمق صوتي منخفض (طبقة عميقة + نغمة بومودورو هادئة وواضحة)
+        const triggerChime = (startOffset, mainFreq, deepFreq, duration) => {
+          const t = now + startOffset;
+
+          // 1. طبقة عميقة منخفضة (Deep low-end warmth)
+          const deepOsc = ctx.createOscillator();
+          const deepFilter = ctx.createBiquadFilter();
+          const deepGain = ctx.createGain();
+
+          deepOsc.type = "triangle";
+          deepOsc.frequency.setValueAtTime(deepFreq, t);
+          deepOsc.frequency.exponentialRampToValueAtTime(deepFreq * 0.94, t + duration);
+
+          deepFilter.type = "lowpass";
+          deepFilter.frequency.setValueAtTime(340, t);
+          deepFilter.Q.setValueAtTime(1.4, t);
+
+          deepGain.gain.setValueAtTime(0.001, t);
+          deepGain.gain.linearRampToValueAtTime(0.32, t + 0.018);
+          deepGain.gain.exponentialRampToValueAtTime(0.0008, t + duration);
+
+          deepOsc.connect(deepFilter);
+          deepFilter.connect(deepGain);
+          deepGain.connect(ctx.destination);
+          deepOsc.start(t);
+          deepOsc.stop(t + duration + 0.03);
+
+          // 2. نغمة بومودورو الرئيسية الهادئة والمريحة (بدون صفير أو حدة مفرطة)
+          const mainOsc = ctx.createOscillator();
+          const mainFilter = ctx.createBiquadFilter();
+          const mainGain = ctx.createGain();
+
+          mainOsc.type = "sine";
+          mainOsc.frequency.setValueAtTime(mainFreq, t);
+          mainOsc.frequency.exponentialRampToValueAtTime(mainFreq * 1.006, t + 0.06);
+
+          mainFilter.type = "lowpass";
+          mainFilter.frequency.setValueAtTime(1900, t);
+
+          mainGain.gain.setValueAtTime(0.001, t);
+          mainGain.gain.linearRampToValueAtTime(0.24, t + 0.012);
+          mainGain.gain.exponentialRampToValueAtTime(0.0008, t + duration);
+
+          mainOsc.connect(mainFilter);
+          mainFilter.connect(mainGain);
+          mainGain.connect(ctx.destination);
+          mainOsc.start(t);
+          mainOsc.stop(t + duration + 0.03);
+        };
+
+        // رنتان بومودورو متزنتان بعمق واضح
+        triggerChime(0.0, 880.0, 146.83, 0.34);     // A5 + D3 عميق
+        triggerChime(0.22, 1046.5, 196.0, 0.42);    // C6 + G3 عميق
+      } catch {}
+    }
+
+    function playRankUpFanfareSound() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        // نغمة ترقية احتفالية تصاعدية (C5 -> E5 -> G5 -> C6)
+        const notes = [
+          { freq: 523.25, delay: 0.0, dur: 0.16, peak: 0.22 },
+          { freq: 659.25, delay: 0.11, dur: 0.16, peak: 0.24 },
+          { freq: 783.99, delay: 0.22, dur: 0.18, peak: 0.26 },
+          { freq: 1046.50, delay: 0.34, dur: 0.55, peak: 0.30 }
+        ];
+
+        notes.forEach((n) => {
+          const osc = ctx.createOscillator();
+          const oscHarm = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(n.freq, now + n.delay);
+
+          oscHarm.type = "sine";
+          oscHarm.frequency.setValueAtTime(n.freq * 2, now + n.delay);
+
+          const harmGain = ctx.createGain();
+          harmGain.gain.setValueAtTime(0.18, now + n.delay);
+
+          gain.gain.setValueAtTime(0.001, now + n.delay);
+          gain.gain.exponentialRampToValueAtTime(n.peak, now + n.delay + 0.025);
+          gain.gain.exponentialRampToValueAtTime(0.0008, now + n.delay + n.dur);
+
+          osc.connect(gain);
+          oscHarm.connect(harmGain);
+          harmGain.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(now + n.delay);
+          osc.stop(now + n.delay + n.dur + 0.03);
+
+          oscHarm.start(now + n.delay);
+          oscHarm.stop(now + n.delay + n.dur + 0.03);
+        });
+      } catch {}
+    }
+
+    function getRankIndexForPoints(pts) {
+      const total = pts || 0;
+      let idx = 0;
+      for (let i = 0; i < RANKS.length; i++) {
+        if (total >= RANKS[i].minPts) idx = i;
+      }
+      return idx;
+    }
+
     const ENTRANCE_PHRASES = [
       "مرحباً بك في الحلبة... هنا تُصنع الأفعال، لا الأقوال.",
       "هذا اليوم ستتجاوز حدودك يا بطل.",
@@ -972,10 +1104,12 @@
       const task = state.tasks[idx];
 
       if (action === "complete") {
+        const prevRankIdx = getRankIndexForPoints(state.lifetimePoints);
         state.points += task.points;
         state.lifetimePoints += task.points;
         state.todayEarned += task.points;
         state.completedCountToday += 1;
+        const nextRankIdx = getRankIndexForPoints(state.lifetimePoints);
         state.history.unshift({
           id: Date.now(),
           type: "EARN",
@@ -986,6 +1120,11 @@
         });
         saveState();
         renderAll();
+        if (nextRankIdx > prevRankIdx) {
+          playRankUpFanfareSound();
+        } else {
+          playTaskDingSound();
+        }
       } else if (action === "edit") {
         state.editingTaskId = task.id;
         taskFormTitle.textContent = "✏️ تعديل المهمة";
@@ -1016,20 +1155,25 @@
       const reward = state.rewards[idx];
 
       if (action === "buy") {
-        if (state.points < reward.cost) return alert(`رصيدك غير كافٍ. ينقصك ${reward.cost - state.points} نقطة.`);
-        state.points -= reward.cost;
-        state.redeemedCountToday += 1;
+        const currentPts = Number(state.points) || 0;
+        const costPts = Number(reward.cost) || 0;
+        if (costPts <= 0) return;
+        if (currentPts < costPts) return alert(`رصيدك غير كافٍ. ينقصك ${costPts - currentPts} نقطة.`);
+        state.points = Math.max(0, currentPts - costPts);
+        state.redeemedCountToday = (Number(state.redeemedCountToday) || 0) + 1;
         state.history.unshift({
           id: Date.now(),
           type: "SPEND",
           title: reward.title,
           emoji: reward.emoji,
-          points: reward.cost,
+          points: costPts,
           time: new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })
         });
         saveState();
         renderAll();
-        alert(`تم شراء المكافأة: ${reward.emoji} ${reward.title}!`);
+        setTimeout(() => {
+          alert(`تم خصم ${costPts} نقطة وشراء المكافأة: ${reward.emoji} ${reward.title}!`);
+        }, 30);
       } else if (action === "edit") {
         state.editingRewardId = reward.id;
         rewardFormTitle.textContent = "✏️ تعديل المكافأة";
@@ -1213,7 +1357,7 @@
       ensureCurrentDay();
       entranceQuoteText.textContent = ENTRANCE_PHRASES[state.entranceIndex % ENTRANCE_PHRASES.length];
       todayDateLabel.textContent = state.dayKey;
-      pointsDisplay.textContent = state.points;
+      pointsDisplay.textContent = Number(state.points) || 0;
 
       statCompletedTasks.textContent = state.completedCountToday || 0;
       statTodayEarned.textContent = state.todayEarned || 0;
@@ -1248,7 +1392,7 @@
         rewardsList.innerHTML = `<div class="empty-state">لا توجد مكافآت حالياً.</div>`;
       } else {
         rewardsList.innerHTML = state.rewards.map((r) => {
-          const canAfford = state.points >= r.cost;
+          const canAfford = (Number(state.points) || 0) >= (Number(r.cost) || 0);
           return `
             <div class="item-card">
               <div class="item-left">
@@ -1256,7 +1400,7 @@
                 <div>
                   <div class="item-title">${escapeHtml(r.title)}</div>
                   <div class="item-pts-cost">التكلفة: ${r.cost} نقطة</div>
-                  ${!canAfford ? `<div class="item-need">ينقصك ${r.cost - state.points} نقطة اليوم</div>` : ""}
+                  ${!canAfford ? `<div class="item-need">ينقصك ${(Number(r.cost) || 0) - (Number(state.points) || 0)} نقطة اليوم</div>` : ""}
                 </div>
               </div>
               <div class="item-actions">
